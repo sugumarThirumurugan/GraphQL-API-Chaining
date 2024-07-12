@@ -1,0 +1,327 @@
+{
+	"info": {
+		"_postman_id": "2650a22e-d0f7-4989-8035-96479c4f89ca",
+		"name": "BooksPractice",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "32885420"
+	},
+	"item": [
+		{
+			"name": "createBooks",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var randomString = Math.random().toString(20).substring(10,20);\r",
+							"\r",
+							"pm.environment.set(\"authorVariable\",randomString);\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonBody=pm.response.json();\r",
+							"//To verify the status code\r",
+							"pm.test(\"Verify the status code\",()=>{\r",
+							"    pm.response.to.have.status(201)\r",
+							"    pm.response.to.have.status('Created')\r",
+							"});\r",
+							"//To verify the Response Time\r",
+							"pm.test(\"Verify the Response Time\",()=>{\r",
+							"    pm.expect(pm.response.responseTime).to.below(100);\r",
+							"})\r",
+							"//To verify the Content Type\r",
+							"pm.test(\"Verify the Content Type is in Header\",()=>{\r",
+							"    pm.response.to.have.header('Content-Type')\r",
+							"});\r",
+							"//To Verify the Content-Type is Application/Json\r",
+							"pm.test(\"Verify the Content-Type is Application/Json\",()=>{\r",
+							"    pm.expect(pm.response.headers.get('Content-Type')).to.eql('application/json')\r",
+							"});\r",
+							"//To verify the Json Response Type\r",
+							"pm.test(\"Verify the Json Response Type\",()=>{\r",
+							"    pm.expect(jsonBody).to.be.an('object')\r",
+							"    pm.expect(jsonBody.id).to.be.an('string')\r",
+							"    pm.expect(jsonBody.author).to.be.an('string')\r",
+							"    pm.expect(jsonBody.category).to.be.an('string')\r",
+							"    pm.expect(jsonBody.price).to.be.an('string')\r",
+							"    pm.expect(jsonBody.title).to.be.an('string')\r",
+							"});\r",
+							"\r",
+							"var jsonResponse=JSON.parse(responseBody);\r",
+							"pm.environment.set('createdId',jsonResponse.id);\r",
+							"pm.environment.set('createdAuthor',jsonResponse.author);\r",
+							"pm.environment.set('createdCategory',jsonResponse.category);\r",
+							"pm.environment.set('createdPrice',jsonResponse.price);\r",
+							"pm.environment.set('createdTitle',jsonResponse.title);\r",
+							"\r",
+							"//To Verify the Author Name is Same\r",
+							"pm.test(\"Verify the author name is same\",()=>{\r",
+							"    pm.expect(pm.environment.get('authorVariable')).to.eql(pm.environment.get('createdAuthor'));\r",
+							"})\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n      \"author\": \"{{authorVariable}}\",\r\n      \"category\": \"reference\",\r\n      \"price\": \"4.95\",\r\n      \"title\": \"Roman History\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/Books",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"Books"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getBooks",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"//To Verify the Status Code and Status Message\r",
+							"pm.test(\"Verify the status code\",()=>{\r",
+							"    pm.response.to.have.status(200)\r",
+							"    pm.response.to.have.status('OK')\r",
+							"});\r",
+							"//To verify the Response Time\r",
+							"pm.test(\"Verify the Response Time\",()=>{\r",
+							"    pm.expect(pm.response.responseTime).to.below(100);\r",
+							"})\r",
+							"//To verify the Content Type\r",
+							"pm.test(\"Verify the Content Type is in Header\",()=>{\r",
+							"    pm.response.to.have.header('Content-Type')\r",
+							"});\r",
+							"//To Verify the Content-Type is Application/Json\r",
+							"pm.test(\"Verify the Content-Type is Application/Json\",()=>{\r",
+							"    pm.expect(pm.response.headers.get('Content-Type')).to.eql('application/json')\r",
+							"});\r",
+							"var jsonBody = JSON.parse(responseBody);\r",
+							"//To Verify the created ID and Retrived ID\r",
+							"pm.test(\"To Veriy the Created ID and Retrived ID\",()=>{\r",
+							"  pm.expect(pm.environment.get('createdId')).to.eql(jsonBody.id)  \r",
+							"});\r",
+							"//To verify the Json Response variables\r",
+							"pm.test(\"Verify the Json Response Variables\",()=>{\r",
+							"    pm.expect(jsonBody).to.be.an('object')\r",
+							"    pm.expect(jsonBody.id).to.be.an('string')\r",
+							"    pm.expect(jsonBody.author).to.be.an('string')\r",
+							"    pm.expect(jsonBody.price).to.be.an('string')\r",
+							"    pm.expect(jsonBody.title).to.be.an('string')\r",
+							"})\r",
+							"//To Verify the json Body Values\r",
+							"pm.expect(\"Verify the json Body Values\",()=>{\r",
+							"    pm.expect(pm.environment.get('createdAuthor')).to.eql(jsonBody.author)\r",
+							"    pm.expect(pm.environment.get('createdCategory')).to.eql(jsonBody.category)\r",
+							"    pm.expect(pm.environment.get('createdPrice')).to.eql(jsonBody.price)\r",
+							"    pm.expect(pm.environment.get('title')).to.eql(jsonBody.title)\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/Books/{{createdId}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"Books",
+						"{{createdId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "updateBooks",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"//To Verify the Status Code and Status Message\r",
+							"pm.test(\"Verify the status code\",()=>{\r",
+							"    pm.response.to.have.status(200)\r",
+							"    pm.response.to.have.status('OK')\r",
+							"});\r",
+							"//To verify the Response Time\r",
+							"pm.test(\"Verify the Response Time\",()=>{\r",
+							"    pm.expect(pm.response.responseTime).to.below(100);\r",
+							"})\r",
+							"//To verify the Content Type\r",
+							"pm.test(\"Verify the Content Type is in Header\",()=>{\r",
+							"    pm.response.to.have.header('Content-Type')\r",
+							"});\r",
+							"//To Verify the Content-Type is Application/Json\r",
+							"pm.test(\"Verify the Content-Type is Application/Json\",()=>{\r",
+							"    pm.expect(pm.response.headers.get('Content-Type')).to.eql('application/json')\r",
+							"});\r",
+							"var jsonBody = JSON.parse(responseBody);\r",
+							"//To Verify the created ID and Retrived ID\r",
+							"pm.test(\"To Veriy the Created ID and Retrived ID\",()=>{\r",
+							"  pm.expect(pm.environment.get('createdId')).to.eql(jsonBody.id)  \r",
+							"});\r",
+							"//To verify the Json Response variables\r",
+							"pm.test(\"Verify the Json Response Variables\",()=>{\r",
+							"    pm.expect(jsonBody).to.be.an('object')\r",
+							"    pm.expect(jsonBody.id).to.be.an('string')\r",
+							"    pm.expect(jsonBody.author).to.be.an('string')\r",
+							"    pm.expect(jsonBody.price).to.be.an('string')\r",
+							"    pm.expect(jsonBody.title).to.be.an('string')\r",
+							"})\r",
+							"//To Verify the json Body Values\r",
+							"pm.expect(\"Verify the json Body Values\",()=>{\r",
+							"    pm.expect(pm.environment.get('createdAuthor')).to.eql(jsonBody.author)\r",
+							"    pm.expect(pm.environment.get('createdCategory')).to.eql(jsonBody.category)\r",
+							"    pm.expect(pm.environment.get('createdPrice')).to.eql(jsonBody.price)\r",
+							"    pm.expect(pm.environment.get('title')).to.eql(jsonBody.title)\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var randomString = Math.random().toString(20).substring(10,20);\r",
+							"\r",
+							"pm.environment.set(\"authorVariable\",randomString);\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n      \"author\": \"{{authorVariable}}\",\r\n      \"category\": \"reference\",\r\n      \"price\": \"4.95\",\r\n      \"title\": \"Roman History\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/Books/{{createdId}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"Books",
+						"{{createdId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "deleteBooks",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"//To Verify the Status Code and Status Message\r",
+							"pm.test(\"Verify the status code\",()=>{\r",
+							"    pm.response.to.have.status(200)\r",
+							"    pm.response.to.have.status('OK')\r",
+							"});\r",
+							"//To verify the Response Time\r",
+							"pm.test(\"Verify the Response Time\",()=>{\r",
+							"    pm.expect(pm.response.responseTime).to.below(100);\r",
+							"})\r",
+							"//To verify the Content Type\r",
+							"pm.test(\"Verify the Content Type is in Header\",()=>{\r",
+							"    pm.response.to.have.header('Content-Type')\r",
+							"});\r",
+							"//To Verify the Content-Type is Application/Json\r",
+							"pm.test(\"Verify the Content-Type is Application/Json\",()=>{\r",
+							"    pm.expect(pm.response.headers.get('Content-Type')).to.eql('application/json')\r",
+							"});\r",
+							"\r",
+							"//Delete the Environment Variables\r",
+							"pm.environment.unset(\"authorVariable\")\r",
+							"pm.environment.unset('createdId');\r",
+							"pm.environment.unset('createdAuthor');\r",
+							"pm.environment.unset('createdCategory');\r",
+							"pm.environment.unset('createdPrice');\r",
+							"pm.environment.unset('createdTitle');\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/Books/{{createdId}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"Books",
+						"{{createdId}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
