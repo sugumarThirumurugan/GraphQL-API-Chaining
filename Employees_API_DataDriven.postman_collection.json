@@ -1,0 +1,291 @@
+{
+	"info": {
+		"_postman_id": "a8936af7-170f-4ce9-aaaf-6448f8834688",
+		"name": "Employees_API_DataDriven",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "32885420"
+	},
+	"item": [
+		{
+			"name": "Create Employee",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData =JSON.parse(responseBody);\r",
+							"pm.environment.set(\"employeeId\",jsonData.id);\r",
+							"\r",
+							"//To Verify the Response Status Code and Status Message\r",
+							"pm.test(\"Verify the status code and Status Message\",()=>{\r",
+							"    pm.response.to.have.status(201)\r",
+							"    pm.response.to.have.status('Created')\r",
+							"});\r",
+							"//To Verify the Response Time\r",
+							"pm.test(\"Verify the Response Time\",()=>{\r",
+							"    pm.expect(pm.response.responseTime).to.below(250)\r",
+							"});\r",
+							"//To Verify the Content-Type\r",
+							"pm.test(\"Verify the Content-Type\",()=>{\r",
+							"    pm.response.to.have.header('Content-Type')\r",
+							"});\r",
+							"//To Verify the Application/Json is Present or not\r",
+							"pm.test(\"Verify the Content-Type is Application/json\",()=>{\r",
+							"    pm.expect(pm.response.headers.get('Content-Type')).to.eql('application/json')\r",
+							"});\r",
+							"//To Verify the Data Type of Response Body\r",
+							"pm.test(\"Verify the Data Type of Response Body\",()=>{\r",
+							"    pm.expect(jsonData.id).to.be.an('string')\r",
+							"    pm.expect(jsonData.name).to.be.an('string')\r",
+							"    pm.expect(jsonData.designation).to.be.an('string')\r",
+							"    pm.expect(jsonData.Department).to.be.an('string')\r",
+							"});\r",
+							"//Save all the Json Values in to an Environment Variable\r",
+							"pm.environment.set(\"employeeName\",jsonData.name);\r",
+							"pm.environment.set(\"employeeDesignation\",jsonData.designation);\r",
+							"pm.environment.set(\"employeeDepartment\",jsonData.Department);\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "    {\r\n        \"name\": \"{{Name}}\",\r\n        \"designation\": \"{{Designation}}\",\r\n        \"Department\": \"{{Department}}\"\r\n    }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/Employees",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"Employees"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Employee",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData =JSON.parse(responseBody);\r",
+							"\r",
+							"//To Verify the Response Status Code and Status Message\r",
+							"pm.test(\"Verify the status code and Status Message\",()=>{\r",
+							"    pm.response.to.have.status(200)\r",
+							"    pm.response.to.have.status('OK')\r",
+							"});\r",
+							"//To Verify the Response Time\r",
+							"pm.test(\"Verify the Response Time\",()=>{\r",
+							"    pm.expect(pm.response.responseTime).to.below(250)\r",
+							"});\r",
+							"//To Verify the Content-Type\r",
+							"pm.test(\"Verify the Content-Type\",()=>{\r",
+							"    pm.response.to.have.header('Content-Type')\r",
+							"});\r",
+							"//To Verify the Application/Json is Present or not\r",
+							"pm.test(\"Verify the Content-Type is Application/json\",()=>{\r",
+							"    pm.expect(pm.response.headers.get('Content-Type')).to.eql('application/json')\r",
+							"});\r",
+							"//To Verify the Data Type of Response Body\r",
+							"pm.test(\"Verify the Data Type of Response Body\",()=>{\r",
+							"    pm.expect(jsonData.id).to.be.an('string')\r",
+							"    pm.expect(jsonData.name).to.be.an('string')\r",
+							"    pm.expect(jsonData.designation).to.be.an('string')\r",
+							"    pm.expect(jsonData.Department).to.be.an('string')\r",
+							"});\r",
+							"//To Verify the Expected and Actual Result are Same\r",
+							"pm.test(\"Verify the Expected and Actual Result are Same\",()=>{\r",
+							"    pm.expect(jsonData.id).to.eql(pm.environment.get('employeeId'))\r",
+							"    pm.expect(jsonData.name).to.eql(pm.environment.get('employeeName'))\r",
+							"    pm.expect(jsonData.designation).to.eql(pm.environment.get('employeeDesignation'))\r",
+							"    pm.expect(jsonData.Department).to.eql(pm.environment.get('employeeDepartment'))\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/Employees/{{employeeId}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"Employees",
+						"{{employeeId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Employee",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData =JSON.parse(responseBody);\r",
+							"\r",
+							"//To Verify the Response Status Code and Status Message\r",
+							"pm.test(\"Verify the status code and Status Message\",()=>{\r",
+							"    pm.response.to.have.status(200)\r",
+							"    pm.response.to.have.status('OK')\r",
+							"});\r",
+							"//To Verify the Response Time\r",
+							"pm.test(\"Verify the Response Time\",()=>{\r",
+							"    pm.expect(pm.response.responseTime).to.below(250)\r",
+							"});\r",
+							"//To Verify the Content-Type\r",
+							"pm.test(\"Verify the Content-Type\",()=>{\r",
+							"    pm.response.to.have.header('Content-Type')\r",
+							"});\r",
+							"//To Verify the Application/Json is Present or not\r",
+							"pm.test(\"Verify the Content-Type is Application/json\",()=>{\r",
+							"    pm.expect(pm.response.headers.get('Content-Type')).to.eql('application/json')\r",
+							"});\r",
+							"//To Verify the Data Type of Response Body\r",
+							"pm.test(\"Verify the Data Type of Response Body\",()=>{\r",
+							"    pm.expect(jsonData.id).to.be.an('string')\r",
+							"    pm.expect(jsonData.name).to.be.an('string')\r",
+							"    pm.expect(jsonData.designation).to.be.an('string')\r",
+							"    pm.expect(jsonData.Department).to.be.an('string')\r",
+							"});\r",
+							"//To Verify the Expected and Actual Result are Same\r",
+							"pm.test(\"Verify the Expected and Actual Result are Same\",()=>{\r",
+							"    pm.expect(jsonData.id).to.eql(pm.environment.get('employeeId'))\r",
+							"    pm.expect(jsonData.name).to.eql(pm.environment.get('employeeName'))\r",
+							"    pm.expect(jsonData.designation).to.eql(pm.environment.get('employeeDesignation'))\r",
+							"    pm.expect(jsonData.Department).to.eql(pm.environment.get('employeeDepartment'))\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "    {\r\n        \"name\": \"{{Name}}\",\r\n        \"designation\": \"{{Designation}}\",\r\n        \"Department\": \"{{Department}}\"\r\n    }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/Employees/{{employeeId}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"Employees",
+						"{{employeeId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Employee",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"//To Verify the Response Status Code and Status Message\r",
+							"pm.test(\"Verify the status code and Status Message\",()=>{\r",
+							"    pm.response.to.have.status(200)\r",
+							"    pm.response.to.have.status('OK')\r",
+							"});\r",
+							"//To Verify the Response Time\r",
+							"pm.test(\"Verify the Response Time\",()=>{\r",
+							"    pm.expect(pm.response.responseTime).to.below(250)\r",
+							"});\r",
+							"//To Verify the Content-Type\r",
+							"pm.test(\"Verify the Content-Type\",()=>{\r",
+							"    pm.response.to.have.header('Content-Type')\r",
+							"});\r",
+							"//To Verify the Application/Json is Present or not\r",
+							"pm.test(\"Verify the Content-Type is Application/json\",()=>{\r",
+							"    pm.expect(pm.response.headers.get('Content-Type')).to.eql('application/json')\r",
+							"});\r",
+							"\r",
+							"//Unset all the Environment Variables\r",
+							"pm.environment.unset(\"employeeId\");\r",
+							"pm.environment.unset(\"employeeName\");\r",
+							"pm.environment.unset(\"employeeDesignation\");\r",
+							"pm.environment.unset(\"employeeDepartment\");\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/Employees/{{employeeId}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"Employees",
+						"{{employeeId}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
