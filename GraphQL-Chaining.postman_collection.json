@@ -1,0 +1,378 @@
+{
+	"info": {
+		"_postman_id": "bcf04c36-0d04-4d96-ad3d-8c9120ba711e",
+		"name": "GraphQL-Chaining",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "32885420"
+	},
+	"item": [
+		{
+			"name": "Create Todos",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"//Parsing the Json Body\r",
+							"var jsonBody=JSON.parse(responseBody);\r",
+							"//Extracting the Id,Title,is_public from the jsonBody\r",
+							"var id=jsonBody.data.insert_todos.returning[0].id;\r",
+							"var title=jsonBody.data.insert_todos.returning[0].title;\r",
+							"var is_public = jsonBody.data.insert_todos.returning[0].is_public;\r",
+							"//Store the ID,Title,is-public as a Environment Variable\r",
+							"pm.environment.set(\"createdTodosId\",id);\r",
+							"pm.environment.set(\"CreatedTitle\",title);\r",
+							"pm.environment.set(\"Created_is_public\",is_public)\r",
+							"//Validate the Respons code is 200\r",
+							"pm.test(\"Validate the Response code and Message\",()=>{\r",
+							"    pm.response.to.have.status(200)\r",
+							"    pm.response.to.have.status('OK')\r",
+							"});\r",
+							"//Validate the Response Time\r",
+							"pm.test(\"Validate the Response Time\",()=>{\r",
+							"    pm.expect(pm.response.responseTime).to.below(2000)\r",
+							"});\r",
+							"//Validate the Content-Type is Present\r",
+							"pm.test(\"Validate the Content-Type is Present\",()=>{\r",
+							"    pm.response.to.have.header('Content-Type')\r",
+							"})\r",
+							"//Vaidate the Content-Type is Application/json\r",
+							"pm.test(\"Vaidate the Content-Type is Application/json\",()=>{\r",
+							"    pm.expect(pm.response.headers.get('Content-Type')).to.eql(\r",
+							"                                                        'application/json; charset=utf-8')});\r",
+							"//Validate the Json Fields in Response\r",
+							"pm.test(\"Validate the Json Fields in Response\",()=>{\r",
+							"    pm.expect(jsonBody).to.be.an('object')\r",
+							"    pm.expect(jsonBody.data.insert_todos.returning[0].id).to.be.an('number')\r",
+							"    pm.expect(jsonBody.data.insert_todos.returning[0].title).to.be.an('string')\r",
+							"     pm.expect(jsonBody.data.insert_todos.returning[0].is_public).to.be.an('boolean')\r",
+							"})\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik9FWTJSVGM1UlVOR05qSXhSRUV5TURJNFFUWXdNekZETWtReU1EQXdSVUV4UVVRM05EazFNQSJ9.eyJodHRwczovL2hhc3VyYS5pby9qd3QvY2xhaW1zIjp7IngtaGFzdXJhLWRlZmF1bHQtcm9sZSI6InVzZXIiLCJ4LWhhc3VyYS1hbGxvd2VkLXJvbGVzIjpbInVzZXIiXSwieC1oYXN1cmEtdXNlci1pZCI6ImF1dGgwfDY2Yjg0ZjA1OGE3M2Q3YWY2NGNiODVmNSJ9LCJuaWNrbmFtZSI6InN1Z3VtYXJzdXJpeWEzNDciLCJuYW1lIjoic3VndW1hcnN1cml5YTM0N0BnbWFpbC5jb20iLCJwaWN0dXJlIjoiaHR0cHM6Ly9zLmdyYXZhdGFyLmNvbS9hdmF0YXIvYjNjNzZiZmJjM2EyNmRmMTQ1YWM3N2Y0NTIzYzQ2ZDU_cz00ODAmcj1wZyZkPWh0dHBzJTNBJTJGJTJGY2RuLmF1dGgwLmNvbSUyRmF2YXRhcnMlMkZzdS5wbmciLCJ1cGRhdGVkX2F0IjoiMjAyNC0wOC0xMVQwNTo0MToyNi40OTdaIiwiaXNzIjoiaHR0cHM6Ly9ncmFwaHFsLXR1dG9yaWFscy5hdXRoMC5jb20vIiwiYXVkIjoiUDM4cW5GbzFsRkFRSnJ6a3VuLS13RXpxbGpWTkdjV1ciLCJpYXQiOjE3MjM0NDU4MjYsImV4cCI6MTcyMzQ4MTgyNiwic3ViIjoiYXV0aDB8NjZiODRmMDU4YTczZDdhZjY0Y2I4NWY1IiwiYXRfaGFzaCI6InhrZ2VGZVM5UXctRHlRVXZEa0ZzeEEiLCJzaWQiOiJvVV83U1NzYy1sWE4xSEpDTVJpYmhTOEdELTNlX2tRbCIsIm5vbmNlIjoiSX5pYU54NH5QYmV2UWxoVjdDRE50bG5PUmxKSVRyZ0UifQ.jWLbik0kZK5cAzNWOt0fniHPE-GWSM6Gf-Fo3K0epzR2aqrT50NpFN6IkorXeITqnT67S-3_7KZuxaxiZVP2lzwefiRB08fHzuKJ3poTYhLzDrvvvwWKxrGiyq7DWZZYO9Ggp7DEyeXTgbCIaCHaWI5zbTW30KXiX9AAJouqYovVKHisEASavR5KQEeHXBBUt-OncCrG6NK8hnMcJvgJCw3UbwRm7vLPBczpBar8Nbvg-e2Js8tXugclpb6jOek-dsR1AQxrIngjzoaCmXk7yegwPb_mkBCrHsTi5vUqfdmXIz6WlkskWMmYtJSyTvfuGJkPKB7lCCXmTLhYTBVFWQ",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "mutation practice($todos_input: todos_insert_input!) {\r\n  insert_todos(objects: [$todos_input]) {\r\n    returning {\r\n      id\r\n      title\r\n      is_public\r\n    }\r\n  }\r\n}\r\n",
+						"variables": "{\r\n  \"todos_input\":{\r\n    \"title\":\"Software\",\r\n    \"is_public\":true\r\n  }\r\n}"
+					}
+				},
+				"url": {
+					"raw": "https://hasura.io/learn/graphql",
+					"protocol": "https",
+					"host": [
+						"hasura",
+						"io"
+					],
+					"path": [
+						"learn",
+						"graphql"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Todos",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"//Parsing the Json Body\r",
+							"var jsonBody=JSON.parse(responseBody);\r",
+							"//Validate the Respons code is 200\r",
+							"pm.test(\"Validate the Response code and Message\",()=>{\r",
+							"    pm.response.to.have.status(200)\r",
+							"    pm.response.to.have.status('OK')\r",
+							"});\r",
+							"//Validate the Response Time\r",
+							"pm.test(\"Validate the Response Time\",()=>{\r",
+							"    pm.expect(pm.response.responseTime).to.below(2000)\r",
+							"});\r",
+							"//Validate the Content-Type is Present\r",
+							"pm.test(\"Validate the Content-Type is Present\",()=>{\r",
+							"    pm.response.to.have.header('Content-Type')\r",
+							"})\r",
+							"//Vaidate the Content-Type is Application/json\r",
+							"pm.test(\"Vaidate the Content-Type is Application/json\",()=>{\r",
+							"    pm.expect(pm.response.headers.get('Content-Type')).to.eql(\r",
+							"                                                        'application/json; charset=utf-8')});\r",
+							"//Validate the Json Fields in Response\r",
+							"pm.test(\"Validate the Json Fields in Response\",()=>{\r",
+							"    pm.expect(jsonBody).to.be.an('object')\r",
+							"    pm.expect(jsonBody.data.todos[0].id).to.be.an('number')\r",
+							"    pm.expect(jsonBody.data.todos[0].title).to.be.an('string')\r",
+							"    pm.expect(jsonBody.data.todos[0].is_public).to.be.an('boolean')\r",
+							"});\r",
+							"\r",
+							"//Validate the Json value in Response\r",
+							"pm.test(\"Validate the Json Values in Fields\",()=>{\r",
+							"    pm.expect(jsonBody.data.todos[0].id).to.eql(pm.environment.get('createdTodosId'))\r",
+							"    pm.expect(jsonBody.data.todos[0].title).to.eql(pm.environment.get('CreatedTitle'))\r",
+							"     pm.expect(jsonBody.data.todos[0].is_public).to.eql(pm.environment.get('Created_is_public'))\r",
+							"});\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik9FWTJSVGM1UlVOR05qSXhSRUV5TURJNFFUWXdNekZETWtReU1EQXdSVUV4UVVRM05EazFNQSJ9.eyJodHRwczovL2hhc3VyYS5pby9qd3QvY2xhaW1zIjp7IngtaGFzdXJhLWRlZmF1bHQtcm9sZSI6InVzZXIiLCJ4LWhhc3VyYS1hbGxvd2VkLXJvbGVzIjpbInVzZXIiXSwieC1oYXN1cmEtdXNlci1pZCI6ImF1dGgwfDY2Yjg0ZjA1OGE3M2Q3YWY2NGNiODVmNSJ9LCJuaWNrbmFtZSI6InN1Z3VtYXJzdXJpeWEzNDciLCJuYW1lIjoic3VndW1hcnN1cml5YTM0N0BnbWFpbC5jb20iLCJwaWN0dXJlIjoiaHR0cHM6Ly9zLmdyYXZhdGFyLmNvbS9hdmF0YXIvYjNjNzZiZmJjM2EyNmRmMTQ1YWM3N2Y0NTIzYzQ2ZDU_cz00ODAmcj1wZyZkPWh0dHBzJTNBJTJGJTJGY2RuLmF1dGgwLmNvbSUyRmF2YXRhcnMlMkZzdS5wbmciLCJ1cGRhdGVkX2F0IjoiMjAyNC0wOC0xMVQwNTo0MToyNi40OTdaIiwiaXNzIjoiaHR0cHM6Ly9ncmFwaHFsLXR1dG9yaWFscy5hdXRoMC5jb20vIiwiYXVkIjoiUDM4cW5GbzFsRkFRSnJ6a3VuLS13RXpxbGpWTkdjV1ciLCJpYXQiOjE3MjM0NDU4MjYsImV4cCI6MTcyMzQ4MTgyNiwic3ViIjoiYXV0aDB8NjZiODRmMDU4YTczZDdhZjY0Y2I4NWY1IiwiYXRfaGFzaCI6InhrZ2VGZVM5UXctRHlRVXZEa0ZzeEEiLCJzaWQiOiJvVV83U1NzYy1sWE4xSEpDTVJpYmhTOEdELTNlX2tRbCIsIm5vbmNlIjoiSX5pYU54NH5QYmV2UWxoVjdDRE50bG5PUmxKSVRyZ0UifQ.jWLbik0kZK5cAzNWOt0fniHPE-GWSM6Gf-Fo3K0epzR2aqrT50NpFN6IkorXeITqnT67S-3_7KZuxaxiZVP2lzwefiRB08fHzuKJ3poTYhLzDrvvvwWKxrGiyq7DWZZYO9Ggp7DEyeXTgbCIaCHaWI5zbTW30KXiX9AAJouqYovVKHisEASavR5KQEeHXBBUt-OncCrG6NK8hnMcJvgJCw3UbwRm7vLPBczpBar8Nbvg-e2Js8tXugclpb6jOek-dsR1AQxrIngjzoaCmXk7yegwPb_mkBCrHsTi5vUqfdmXIz6WlkskWMmYtJSyTvfuGJkPKB7lCCXmTLhYTBVFWQ",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "query practice($id: Int) {\r\n  todos(where: {id: {_eq: $id}}) {\r\n    id\r\n    title\r\n    is_public\r\n  }\r\n}\r\n\r\n",
+						"variables": "\r\n{\r\n  \"id\":{{createdTodosId}}\r\n}"
+					}
+				},
+				"url": {
+					"raw": "https://hasura.io/learn/graphql",
+					"protocol": "https",
+					"host": [
+						"hasura",
+						"io"
+					],
+					"path": [
+						"learn",
+						"graphql"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Todos",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"//Parsing the Json Body\r",
+							"var jsonBody=JSON.parse(responseBody);\r",
+							"//Validate the Respons code is 200\r",
+							"pm.test(\"Validate the Response code and Message\",()=>{\r",
+							"    pm.response.to.have.status(200)\r",
+							"    pm.response.to.have.status('OK')\r",
+							"});\r",
+							"//Validate the Response Time\r",
+							"pm.test(\"Validate the Response Time\",()=>{\r",
+							"    pm.expect(pm.response.responseTime).to.below(2000)\r",
+							"});\r",
+							"//Validate the Content-Type is Present\r",
+							"pm.test(\"Validate the Content-Type is Present\",()=>{\r",
+							"    pm.response.to.have.header('Content-Type')\r",
+							"})\r",
+							"//Vaidate the Content-Type is Application/json\r",
+							"pm.test(\"Vaidate the Content-Type is Application/json\",()=>{\r",
+							"    pm.expect(pm.response.headers.get('Content-Type')).to.eql(\r",
+							"                                                        'application/json; charset=utf-8')});\r",
+							"//Validate the Json Fields in Response\r",
+							"pm.test(\"Validate the Json Fields in Response\",()=>{\r",
+							"    pm.expect(jsonBody).to.be.an('object')\r",
+							"    pm.expect(jsonBody.data.update_todos.returning[0].id).to.be.an('number')\r",
+							"    pm.expect(jsonBody.data.update_todos.returning[0].title).to.be.an('string')\r",
+							"    pm.expect(jsonBody.data.update_todos.returning[0].is_public).to.be.an('boolean')\r",
+							"});\r",
+							"\r",
+							"//Validate the Json value in Response\r",
+							"pm.test(\"Validate the Json Values in Fields\",()=>{\r",
+							"    pm.expect(jsonBody.data.update_todos.returning[0].id).to.eql(pm.environment.get('createdTodosId'))\r",
+							"    pm.expect(jsonBody.data.update_todos.returning[0].title).to.eql('Software-Qa')\r",
+							"     pm.expect(jsonBody.data.update_todos.returning[0].is_public).to.eql(pm.environment.get('Created_is_public'))\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik9FWTJSVGM1UlVOR05qSXhSRUV5TURJNFFUWXdNekZETWtReU1EQXdSVUV4UVVRM05EazFNQSJ9.eyJodHRwczovL2hhc3VyYS5pby9qd3QvY2xhaW1zIjp7IngtaGFzdXJhLWRlZmF1bHQtcm9sZSI6InVzZXIiLCJ4LWhhc3VyYS1hbGxvd2VkLXJvbGVzIjpbInVzZXIiXSwieC1oYXN1cmEtdXNlci1pZCI6ImF1dGgwfDY2Yjg0ZjA1OGE3M2Q3YWY2NGNiODVmNSJ9LCJuaWNrbmFtZSI6InN1Z3VtYXJzdXJpeWEzNDciLCJuYW1lIjoic3VndW1hcnN1cml5YTM0N0BnbWFpbC5jb20iLCJwaWN0dXJlIjoiaHR0cHM6Ly9zLmdyYXZhdGFyLmNvbS9hdmF0YXIvYjNjNzZiZmJjM2EyNmRmMTQ1YWM3N2Y0NTIzYzQ2ZDU_cz00ODAmcj1wZyZkPWh0dHBzJTNBJTJGJTJGY2RuLmF1dGgwLmNvbSUyRmF2YXRhcnMlMkZzdS5wbmciLCJ1cGRhdGVkX2F0IjoiMjAyNC0wOC0xMVQwNTo0MToyNi40OTdaIiwiaXNzIjoiaHR0cHM6Ly9ncmFwaHFsLXR1dG9yaWFscy5hdXRoMC5jb20vIiwiYXVkIjoiUDM4cW5GbzFsRkFRSnJ6a3VuLS13RXpxbGpWTkdjV1ciLCJpYXQiOjE3MjM0NDU4MjYsImV4cCI6MTcyMzQ4MTgyNiwic3ViIjoiYXV0aDB8NjZiODRmMDU4YTczZDdhZjY0Y2I4NWY1IiwiYXRfaGFzaCI6InhrZ2VGZVM5UXctRHlRVXZEa0ZzeEEiLCJzaWQiOiJvVV83U1NzYy1sWE4xSEpDTVJpYmhTOEdELTNlX2tRbCIsIm5vbmNlIjoiSX5pYU54NH5QYmV2UWxoVjdDRE50bG5PUmxKSVRyZ0UifQ.jWLbik0kZK5cAzNWOt0fniHPE-GWSM6Gf-Fo3K0epzR2aqrT50NpFN6IkorXeITqnT67S-3_7KZuxaxiZVP2lzwefiRB08fHzuKJ3poTYhLzDrvvvwWKxrGiyq7DWZZYO9Ggp7DEyeXTgbCIaCHaWI5zbTW30KXiX9AAJouqYovVKHisEASavR5KQEeHXBBUt-OncCrG6NK8hnMcJvgJCw3UbwRm7vLPBczpBar8Nbvg-e2Js8tXugclpb6jOek-dsR1AQxrIngjzoaCmXk7yegwPb_mkBCrHsTi5vUqfdmXIz6WlkskWMmYtJSyTvfuGJkPKB7lCCXmTLhYTBVFWQ",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "mutation practice($id:Int,$title:String){\r\n  update_todos(where:{id:{_eq:$id}},_set:{title:$title}){\r\n    returning{\r\n      id\r\n      title\r\n      is_public\r\n    }\r\n  }\r\n}",
+						"variables": "{\r\n  \"id\":{{createdTodosId}},\r\n  \"title\":\"Software-Qa\"\r\n}"
+					}
+				},
+				"url": {
+					"raw": "https://hasura.io/learn/graphql",
+					"protocol": "https",
+					"host": [
+						"hasura",
+						"io"
+					],
+					"path": [
+						"learn",
+						"graphql"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete Todos",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"//Parsing the Json Body\r",
+							"var jsonBody=JSON.parse(responseBody);\r",
+							"//Validate the Respons code is 200\r",
+							"pm.test(\"Validate the Response code and Message\",()=>{\r",
+							"    pm.response.to.have.status(200)\r",
+							"    pm.response.to.have.status('OK')\r",
+							"});\r",
+							"//Validate the Response Time\r",
+							"pm.test(\"Validate the Response Time\",()=>{\r",
+							"    pm.expect(pm.response.responseTime).to.below(2000)\r",
+							"});\r",
+							"//Validate the Content-Type is Present\r",
+							"pm.test(\"Validate the Content-Type is Present\",()=>{\r",
+							"    pm.response.to.have.header('Content-Type')\r",
+							"})\r",
+							"//Vaidate the Content-Type is Application/json\r",
+							"pm.test(\"Vaidate the Content-Type is Application/json\",()=>{\r",
+							"    pm.expect(pm.response.headers.get('Content-Type')).to.eql(\r",
+							"                                                        'application/json; charset=utf-8')});\r",
+							"//Validate the Json Fields in Response\r",
+							"pm.test(\"Validate the Json Fields in Response\",()=>{\r",
+							"    pm.expect(jsonBody).to.be.an('object')\r",
+							"    pm.expect(jsonBody.data.delete_todos.returning[0].id).to.be.an('number')\r",
+							"    pm.expect(jsonBody.data.delete_todos.returning[0].title).to.be.an('string')\r",
+							"    pm.expect(jsonBody.data.delete_todos.returning[0].is_public).to.be.an('boolean')\r",
+							"});\r",
+							"\r",
+							"//Validate the Json value in Response\r",
+							"pm.test(\"Validate the Json Values in Fields\",()=>{\r",
+							"    pm.expect(jsonBody.data.delete_todos.returning[0].id).to.eql(pm.environment.get('createdTodosId'))\r",
+							"    pm.expect(jsonBody.data.delete_todos.returning[0].title).to.eql('Software-Qa')\r",
+							"     pm.expect(jsonBody.data.delete_todos.returning[0].is_public).to.eql(pm.environment.get('Created_is_public'))\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik9FWTJSVGM1UlVOR05qSXhSRUV5TURJNFFUWXdNekZETWtReU1EQXdSVUV4UVVRM05EazFNQSJ9.eyJodHRwczovL2hhc3VyYS5pby9qd3QvY2xhaW1zIjp7IngtaGFzdXJhLWRlZmF1bHQtcm9sZSI6InVzZXIiLCJ4LWhhc3VyYS1hbGxvd2VkLXJvbGVzIjpbInVzZXIiXSwieC1oYXN1cmEtdXNlci1pZCI6ImF1dGgwfDY2Yjg0ZjA1OGE3M2Q3YWY2NGNiODVmNSJ9LCJuaWNrbmFtZSI6InN1Z3VtYXJzdXJpeWEzNDciLCJuYW1lIjoic3VndW1hcnN1cml5YTM0N0BnbWFpbC5jb20iLCJwaWN0dXJlIjoiaHR0cHM6Ly9zLmdyYXZhdGFyLmNvbS9hdmF0YXIvYjNjNzZiZmJjM2EyNmRmMTQ1YWM3N2Y0NTIzYzQ2ZDU_cz00ODAmcj1wZyZkPWh0dHBzJTNBJTJGJTJGY2RuLmF1dGgwLmNvbSUyRmF2YXRhcnMlMkZzdS5wbmciLCJ1cGRhdGVkX2F0IjoiMjAyNC0wOC0xMVQwNTo0MToyNi40OTdaIiwiaXNzIjoiaHR0cHM6Ly9ncmFwaHFsLXR1dG9yaWFscy5hdXRoMC5jb20vIiwiYXVkIjoiUDM4cW5GbzFsRkFRSnJ6a3VuLS13RXpxbGpWTkdjV1ciLCJpYXQiOjE3MjM0NDU4MjYsImV4cCI6MTcyMzQ4MTgyNiwic3ViIjoiYXV0aDB8NjZiODRmMDU4YTczZDdhZjY0Y2I4NWY1IiwiYXRfaGFzaCI6InhrZ2VGZVM5UXctRHlRVXZEa0ZzeEEiLCJzaWQiOiJvVV83U1NzYy1sWE4xSEpDTVJpYmhTOEdELTNlX2tRbCIsIm5vbmNlIjoiSX5pYU54NH5QYmV2UWxoVjdDRE50bG5PUmxKSVRyZ0UifQ.jWLbik0kZK5cAzNWOt0fniHPE-GWSM6Gf-Fo3K0epzR2aqrT50NpFN6IkorXeITqnT67S-3_7KZuxaxiZVP2lzwefiRB08fHzuKJ3poTYhLzDrvvvwWKxrGiyq7DWZZYO9Ggp7DEyeXTgbCIaCHaWI5zbTW30KXiX9AAJouqYovVKHisEASavR5KQEeHXBBUt-OncCrG6NK8hnMcJvgJCw3UbwRm7vLPBczpBar8Nbvg-e2Js8tXugclpb6jOek-dsR1AQxrIngjzoaCmXk7yegwPb_mkBCrHsTi5vUqfdmXIz6WlkskWMmYtJSyTvfuGJkPKB7lCCXmTLhYTBVFWQ",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "mutation practice($id:Int){\r\n  delete_todos(where:{id:{_eq:$id}}){\r\n    returning{\r\n      id\r\n      title\r\n      is_public\r\n    }\r\n  }\r\n}",
+						"variables": "{\r\n  \"id\":{{createdTodosId}}\r\n  \r\n}"
+					}
+				},
+				"url": {
+					"raw": "https://hasura.io/learn/graphql",
+					"protocol": "https",
+					"host": [
+						"hasura",
+						"io"
+					],
+					"path": [
+						"learn",
+						"graphql"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
